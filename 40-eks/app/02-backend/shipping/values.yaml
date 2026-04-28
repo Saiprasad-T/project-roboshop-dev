@@ -1,0 +1,9 @@
+deployment:
+  replicas: 1
+  repository: "saithota9/shipping"
+  tag: "1.0.0"
+configmap:
+  CART_ENDPOINT: "cart:8080"
+  DB_HOST: mysql
+service:
+  type: ClusterIP

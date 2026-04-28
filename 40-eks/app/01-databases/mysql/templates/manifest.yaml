@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: db
+    component: mysql
+spec:
+  selector:
+    matchLabels:
+      project: roboshop
+      tier: db
+      component: mysql # has to match .spec.template.metadata.labels
+  serviceName: "mysql-headless-service"
+  replicas: {{ .Values.statefulset.replicas }}
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        tier: db
+        component: mysql # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+       - name: mysql
+         image: "{{ .Values.statefulset.repository }}:{{ .Values.statefulset.tag }}"
+         imagePullPolicy: Always
+         resources:
+           requests:
+             cpu: "100m"
+             memory: "550Mi"
+           limits:
+             cpu: "300m"
+             memory: "800Mi"
+         startupProbe:
+           tcpSocket:
+             port: 3306
+           failureThreshold: 30
+           periodSeconds: 5
+         readinessProbe:
+           tcpSocket:
+             port: 3306
+           initialDelaySeconds: 30
+           periodSeconds: 10
+         livenessProbe:
+           tcpSocket:
+             port: 3306
+           initialDelaySeconds: 60
+           periodSeconds: 10
+         envFrom:
+           - configMapRef:
+              name: mysql
+         volumeMounts:
+          - name: mysql-volume
+            mountPath: /var/lib/mysql
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - database2
+  volumeClaimTemplates:
+  - metadata:
+      name: mysql-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: my-ebs-sc
+      resources:
+        requests:
+          storage: 1Gi

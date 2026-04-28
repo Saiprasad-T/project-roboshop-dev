@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shipping
+  namespace: roboshop
+data:
+  CART_ENDPOINT:  "{{ .Values.configmap.CART_ENDPOINT }}"
+  DB_HOST: "{{ .Values.configmap.DB_HOST}}"

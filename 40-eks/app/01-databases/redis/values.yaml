@@ -1,0 +1,8 @@
+statefulset:
+  replicas: 1
+  repository: "saithota9/redis"
+  tag: "1.0.0"
+headless:
+  clusterip: None
+service:
+  type: ClusterIP

@@ -1,0 +1,11 @@
+statefulset:
+  replicas: 1
+  repository: "saithota9/rabbitmq"
+  tag: "1.0.0"
+headlessservice:
+  clusterip: None
+service:
+  type: ClusterIP
+configmap:
+  RABBITMQ_DEFAULT_USER: "roboshop"
+  RABBITMQ_DEFAULT_PASS: "roboshop123"

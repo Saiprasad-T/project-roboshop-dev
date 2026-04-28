@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: rabbitmq
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: db
+    component: rabbitmq
+spec:
+  selector:
+    matchLabels:
+      project: roboshop
+      tier: db
+      component: rabbitmq # has to match .spec.template.metadata.labels
+  serviceName: "rabbitmq-headless-service"
+  replicas: {{ .Values.statefulset.replicas }}
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        tier: db
+        component: rabbitmq # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: rabbitmq
+        image: "{{ .Values.statefulset.repository }}:{{ .Values.statefulset.tag }}"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "15m"
+            memory: "128Mi"
+          limits:
+            cpu: "75m"
+            memory: "256Mi"
+        startupProbe:
+          tcpSocket:
+            port: 5672
+          failureThreshold: 40
+          periodSeconds: 6
+        readinessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          tcpSocket:
+            port: 5672
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          failureThreshold: 3
+        envFrom:
+         - configMapRef:
+             name: rabbitmq
+        volumeMounts:
+        - name: rabbitmq-volume
+          mountPath: /var/lib/rabbitmq
+      affinity:
+         nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:
+               - matchExpressions:
+                   - key: tier
+                     operator: In
+                     values:
+                       - database
+  volumeClaimTemplates:
+  - metadata:
+      name: rabbitmq-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: my-ebs-sc
+      resources:
+        requests:
+          storage: 1Gi

@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: backend
+    component: payment
+spec:
+  selector:
+    matchLabels:
+      project: roboshop
+      tier: backend
+      component: payment
+  replicas: {{ .Values.deployment.replicas }}
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        tier: backend
+        component: payment   
+    spec:
+      containers:
+        - name: payment
+          image: "{{ .Values.deployment.repository }}:{{ .Values.deployment.tag }}"
+          imagePullPolicy: Always
+          resources:
+            requests:
+              cpu: "90m"
+              memory: "200Mi"
+            limits:
+              cpu: "150m"
+              memory: "600Mi"
+          startupProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            failureThreshold: 30
+            periodSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            # httpGet:
+            #   path: /health
+            #   port: 8080
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          envFrom:
+            - configMapRef:
+                name: payment
+      affinity:
+         nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:
+               - matchExpressions:
+                   - key: tier
+                     operator: In
+                     values:
+                       - backend2

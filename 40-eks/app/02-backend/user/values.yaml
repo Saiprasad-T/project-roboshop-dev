@@ -1,0 +1,9 @@
+deployment:
+  replicas: 1
+  repository: "saithota9/user"
+  tag: "1.0.0"
+service:
+  type: ClusterIP
+configmap:
+  REDIS_URL: redis://redis:6379
+  MONGO_URL: mongodb://mongodb:27017/users

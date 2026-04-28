@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: db
+    component: redis
+spec:
+  selector:
+    matchLabels:
+      project: roboshop
+      tier: db
+      component: redis # has to match .spec.template.metadata.labels
+  serviceName: "redis-headless-service"
+  replicas: {{ .Values.statefulset.replicas }} # by default is 1
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        tier: db
+        component: redis # has to match .spec.selector.matchLabels
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: redis
+        image: "{{ .Values.statefulset.repository }}:{{ .Values.statefulset.tag }}"
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: "20m"
+            memory: "25Mi"
+          limits:
+            cpu: "60m"
+            memory: "90Mi"
+        readinessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          failureThreshold: 3
+        livenessProbe:
+          tcpSocket:
+            port: 6379
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          failureThreshold: 3
+        volumeMounts:
+        - name: redis-volume
+          mountPath: /data
+      affinity:
+         nodeAffinity:
+           requiredDuringSchedulingIgnoredDuringExecution:
+             nodeSelectorTerms:
+               - matchExpressions:
+                   - key: tier
+                     operator: In
+                     values:
+                       - database
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-volume
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: my-ebs-sc
+      resources:
+        requests:
+          storage: 1Gi

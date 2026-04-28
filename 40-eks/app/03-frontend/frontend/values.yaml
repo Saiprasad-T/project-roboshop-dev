@@ -1,0 +1,6 @@
+deployment:
+  replicas: 1
+  repository: "saithota9/frontend"
+  tag: "1.0.0"
+service:
+  type: LoadBalancer
