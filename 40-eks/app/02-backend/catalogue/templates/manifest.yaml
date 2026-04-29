@@ -82,8 +82,7 @@ spec:
     project: roboshop
     tier: backend
     component: catalogue 
-  # type: ClusterIP
-    type: NodePort
+  type: ClusterIP
   ports:
     - protocol: TCP
       port: 8080
