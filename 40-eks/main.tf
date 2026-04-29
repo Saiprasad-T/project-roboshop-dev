@@ -16,9 +16,9 @@ module "eks" {
       kubernetes_version = var.eks_nodegroup_blue_version
       instance_types     = ["t3.small"]
       capacity_type  = "SPOT"
-      min_size       = 4
-      max_size       = 6
-      desired_size   = 4
+      min_size       = 2
+      max_size       = 5
+      desired_size   = 3
       labels         = { nodegroup = "blue" }
       iam_role_additional_policies = {
         amazonEBS = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
@@ -31,9 +31,9 @@ module "eks" {
       kubernetes_version = var.eks_nodegroup_green_version
       instance_types     = ["t3.small"]
       capacity_type      = "SPOT"
-      min_size           = 4
-      max_size           = 6
-      desired_size       = 4
+      min_size           = 2
+      max_size           = 5
+      desired_size       = 3
       labels             = { nodegroup = "green" }
       iam_role_additional_policies = {
         amazonEBS = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
