@@ -55,12 +55,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: shipping
-      affinity:
-         nodeAffinity:
-           requiredDuringSchedulingIgnoredDuringExecution:
-             nodeSelectorTerms:
-               - matchExpressions:
-                   - key: tier
-                     operator: In
-                     values:
-                       - backend2
+      # affinity:
+      #    nodeAffinity:
+      #      requiredDuringSchedulingIgnoredDuringExecution:
+      #        nodeSelectorTerms:
+      #          - matchExpressions:
+      #              - key: tier
+      #                operator: In
+      #                values:
+      #                  - backend2
