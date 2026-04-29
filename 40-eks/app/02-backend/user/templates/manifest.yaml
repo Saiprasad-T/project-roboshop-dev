@@ -49,12 +49,12 @@ spec:
           envFrom:
             - configMapRef:
                 name: user
-      affinity:
-         nodeAffinity:
-           requiredDuringSchedulingIgnoredDuringExecution:
-             nodeSelectorTerms:
-               - matchExpressions:
-                   - key: tier
-                     operator: In
-                     values:
-                       - backend
+      # affinity:
+      #    nodeAffinity:
+      #      requiredDuringSchedulingIgnoredDuringExecution:
+      #        nodeSelectorTerms:
+      #          - matchExpressions:
+      #              - key: tier
+      #                operator: In
+      #                values:
+      #                  - backend
