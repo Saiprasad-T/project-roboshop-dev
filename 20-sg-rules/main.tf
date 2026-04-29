@@ -168,15 +168,6 @@ resource "aws_security_group_rule" "mongodb_eks_node" {
 #   security_group_id = local.mongodb
 # }
 
-resource "aws_security_group_rule" "mongodb_eks_node" {
-  type              = "ingress"
-  from_port         = 27017
-  to_port           = 27017
-  protocol          = "tcp"
-  source_security_group_id = local.eks_node
-  security_group_id = local.mongodb
-}
-
 resource "aws_security_group_rule" "redis_eks_node" {
   type              = "ingress"
   from_port         = 6379
