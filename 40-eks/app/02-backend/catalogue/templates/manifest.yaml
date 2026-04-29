@@ -58,15 +58,15 @@ spec:
           envFrom:
             - configMapRef:
                 name: catalogue
-      affinity:
-         nodeAffinity:
-           requiredDuringSchedulingIgnoredDuringExecution:
-             nodeSelectorTerms:
-               - matchExpressions:
-                   - key: tier
-                     operator: In
-                     values:
-                       - backend
+      # affinity:
+      #    nodeAffinity:
+      #      requiredDuringSchedulingIgnoredDuringExecution:
+      #        nodeSelectorTerms:
+      #          - matchExpressions:
+      #              - key: tier
+      #                operator: In
+      #                values:
+      #                  - backend
 ---
 apiVersion: v1
 kind: Service
