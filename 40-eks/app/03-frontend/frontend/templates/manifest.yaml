@@ -51,15 +51,15 @@ spec:
               mountPath: /etc/nginx/nginx.conf
               subPath: nginx.conf
               readOnly: true
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-           nodeSelectorTerms:
-              - matchExpressions:
-                  - key: tier
-                    operator: In
-                    values:
-                     - database2
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #      nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: tier
+      #               operator: In
+      #               values:
+      #                - database2
       volumes:
         - name: frontend
           configMap:
