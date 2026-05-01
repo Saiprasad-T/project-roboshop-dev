@@ -18,7 +18,7 @@ metadata:
 spec:
   parentRefs:
   - name: roboshop-gateway
-    sectionName: https
+    sectionName: http
   hostnames:
   - "roboshop-gw-dev.devopswiththota.online"
   rules:
