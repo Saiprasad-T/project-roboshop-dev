@@ -35,3 +35,8 @@ sudo install -m 0755 /tmp/k9s /usr/local/bin && rm /tmp/k9s
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
 chmod 700 get_helm.sh
 ./get_helm.sh
+
+# terraform 
+yum install -y yum-utils
+yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+yum -y install terraform
